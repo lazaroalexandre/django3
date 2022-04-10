@@ -1,0 +1,91 @@
+{% extends 'modelo.html' %}
+{% load static %}
+{% block conteudo %}
+<br /><br />
+<h1 class="text-center">Lista de relatórios registrados</h1>
+<br /><br />
+<hr>
+<div class="d-flex justify-content-center">
+    <form action="?" method="GET" class="d-flex justify-content-center" style="margin-right: 15%; padding-left: 10px;">
+        <input class="form-control" type="text" name="assunto" id="" size="30" value="{{ request.GET.assunto }}"
+            placeholder="Pesquisar...">
+        <button style="color: #eb444c;" type="submit" class="btn btn-link"><i title="cadastrar" class="fa fa-search"
+                aria-hidden="true"></i></button>
+    </form>
+    <div style="padding-right: 10px;">
+        <a style="background-color: #eb444c; border-color: #eb444c;" class="btn btn-primary"
+            href="{% url 'cadastrar-relatorios' %}"><i class="fa fa-plus" aria-hidden="true"></i></a>
+    </div>
+</div>
+<hr>
+<div class="container" style="background-color: white;">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <tr>
+                <th>
+                    Assunto
+                </th>
+                <th>
+                    Descrição
+                </th>
+                <th>
+                    Data
+                </th>
+                <th>
+                    Opções
+                </th>
+            </tr>
+            {% for campo in object_list %}
+            <tr>
+                <td>{{ campo.assunto }}</td>
+                <td>{{ campo.descricao }}</td>
+                <td>{{ campo.data }}</td>
+                <td>
+                    <a href="{% url 'editar-relatorios' campo.pk %}" class="btn btn-warning btn-sm" title="Editar"><span class="fa fa-edit"></span></a>
+                    <a href="{% url 'excluir-relatorios' campo.pk %}" class="btn btn-danger btn-sm" title="Excluir"><span class="fa fa-trash-o"></span></a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">
+                    Nemhum campo foi registrado!
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <ul class="pagination justify-content-center">
+        
+            {% if page_obj.has_previous %}
+        
+            {% if request.GET.assunto %}
+            <li class="page-item"><a class="page-link" href="?page=1&assunto={{request.GET.assunto}}">&laquo; Primeira</a></li>
+            <li class="page-item"><a class="page-link"
+                    href="?page={{ page_obj.previous_page_number }}&assunto={{request.GET.assunto}}">Anterior</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo; Primeira</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+            {% endif %}
+        
+            {% endif %}
+        
+            <li class="page-item">
+                <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.</span>
+            </li>
+        
+            {% if page_obj.has_next %}
+            {% if request.GET.assunto %}
+            <li class="page-item"><a class="page-link"
+                    href="?page={{ page_obj.next_page_number }}&assunto={{request.GET.assunto}}">Próxima</a></li>
+            <li class="page-item"><a class="page-link"
+                    href="?page={{ page_obj.paginator.num_pages }}&assunto={{request.GET.assunto}}">Última &raquo;</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+            </li>
+            {% endif %}
+            {% endif %}
+        
+        </ul>
+    </div>
+</div>
+{% endblock %}
